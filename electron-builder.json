@@ -1,0 +1,29 @@
+{
+  "appId": "com.yourcompany.moneytracking",
+  "productName": "MoneyTracking",
+  "files": [
+    "out/**/*",
+    "server.js",
+    "main.js",
+    "package.json",
+    "node_modules/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "out",
+      "to": "out"
+    }
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ]
+  }
+}

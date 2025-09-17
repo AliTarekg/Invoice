@@ -1,0 +1,101 @@
+/* Modern Color Overrides */
+
+/* Update all border colors to cyan theme */
+.border-purple-300 { border-color: rgb(103 232 249) !important; }
+.border-purple-500 { border-color: rgb(6 182 212) !important; }
+.focus\:ring-purple-500:focus { --tw-ring-color: rgb(6 182 212) !important; }
+.focus\:border-purple-500:focus { border-color: rgb(6 182 212) !important; }
+
+/* Update background colors */
+.bg-purple-100 { background-color: rgb(207 250 254) !important; }
+.bg-purple-200 { background-color: rgb(165 243 252) !important; }
+.bg-purple-600 { background-color: rgb(8 145 178) !important; }
+.bg-purple-700 { background-color: rgb(14 116 144) !important; }
+.hover\:bg-purple-200:hover { background-color: rgb(165 243 252) !important; }
+.hover\:bg-purple-700:hover { background-color: rgb(14 116 144) !important; }
+
+/* Update text colors */
+.text-purple-300 { color: rgb(103 232 249) !important; }
+.text-purple-500 { color: rgb(6 182 212) !important; }
+.text-purple-600 { color: rgb(8 145 178) !important; }
+.text-purple-700 { color: rgb(14 116 144) !important; }
+.text-purple-800 { color: rgb(21 94 117) !important; }
+
+/* Update gradient colors */
+.from-purple-400 { --tw-gradient-from: rgb(34 197 94) !important; }
+.to-blue-400 { --tw-gradient-to: rgb(59 130 246) !important; }
+.from-purple-500 { --tw-gradient-from: rgb(6 182 212) !important; }
+.to-blue-500 { --tw-gradient-to: rgb(59 130 246) !important; }
+.from-purple-600 { --tw-gradient-from: rgb(8 145 178) !important; }
+.to-blue-600 { --tw-gradient-to: rgb(37 99 235) !important; }
+
+/* Modern glass effects */
+.glass-modern {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.glass-modern:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Button improvements */
+.btn-modern {
+  background: linear-gradient(135deg, rgb(6 182 212), rgb(59 130 246)) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3) !important;
+}
+
+.btn-modern:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4) !important;
+}
+
+/* Input field improvements */
+.input-modern {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 2px solid rgba(6, 182, 212, 0.2) !important;
+  border-radius: 10px !important;
+  transition: all 0.3s ease !important;
+}
+
+.input-modern:focus {
+  border-color: rgb(6 182 212) !important;
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1) !important;
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Card improvements */
+.card-modern {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.card-modern:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Text improvements */
+.text-modern-primary { color: rgb(71 85 105) !important; }
+.text-modern-secondary { color: rgb(100 116 139) !important; }
+.text-modern-accent { color: rgb(6 182 212) !important; }
+
+/* Status colors */
+.status-success { color: rgb(34 197 94) !important; }
+.status-warning { color: rgb(245 158 11) !important; }
+.status-error { color: rgb(239 68 68) !important; }
+.status-info { color: rgb(6 182 212) !important; }
