@@ -9,9 +9,11 @@ import EditProductForm from './EditProductForm';
 import { getSuppliers } from '../lib/suppliers';
 import { Supplier } from '../types';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
 
 export default function ProductsManagement() {
   const { user } = useAuth();
+  const { success, error: notifyError, info, warning } = useNotification();
   const [products, setProducts] = useState<Product[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,9 +23,35 @@ export default function ProductsManagement() {
 
   const loadProducts = async () => {
     setLoading(true);
-    const data = await getProducts();
-    setProducts(data);
-    setLoading(false);
+    try {
+      info('Loading Products', 'Fetching product catalog...');
+      const data = await getProducts();
+      setProducts(data);
+      success('Products Loaded', `Successfully loaded ${data.length} products`);
+      
+      // Check for low stock items (assuming we have quantity or similar field)
+      const lowStockItems = data.filter(product => (product as any).quantity && (product as any).quantity <= 5);
+      if (lowStockItems.length > 0) {
+        warning('Low Stock Alert', `${lowStockItems.length} products have low stock (≤5 units)`, {
+          persistent: true,
+          action: {
+            label: 'View Items',
+            onClick: () => {
+              info('Low Stock Items', lowStockItems.map(p => `${p.name}: ${(p as any).quantity || 0} units`).join('\n'));
+            }
+          }
+        });
+      }
+    } catch (error) {
+      notifyError('Loading Failed', 'Failed to load products. Please try again.', {
+        action: {
+          label: 'Retry',
+          onClick: loadProducts
+        }
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -32,9 +60,23 @@ export default function ProductsManagement() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
-    await deleteProduct(id);
-    loadProducts();
+    const productToDelete = products.find(p => p.id === id);
+    const result = window.confirm(`هل أنت متأكد من حذف المنتج "${productToDelete?.name}"؟`);
+    if (!result) return;
+    
+    try {
+      info('Deleting Product', `Removing "${productToDelete?.name}" from catalog...`);
+      await deleteProduct(id);
+      success('Product Deleted', `"${productToDelete?.name}" has been removed successfully`);
+      loadProducts();
+    } catch (error) {
+      notifyError('Delete Failed', `Failed to delete "${productToDelete?.name}". Please try again.`, {
+        action: {
+          label: 'Try Again',
+          onClick: () => handleDelete(id)
+        }
+      });
+    }
   };
 
   return (
@@ -58,7 +100,7 @@ export default function ProductsManagement() {
           <div className="text-center py-8 text-gray-500">لا توجد منتجات مسجلة</div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-blue-100">
+            <thead className="bg-black">
               <tr>
                 <th className="p-2">اسم المنتج</th>
                 <th className="p-2">الباركود</th>
@@ -72,12 +114,12 @@ export default function ProductsManagement() {
             <tbody>
               {products.map(product => (
                 <tr key={product.id} className="border-b hover:bg-blue-50 transition cursor-pointer" onClick={() => setSelectedProduct(product)}>
-                  <td className="p-2 font-semibold">{product.name}</td>
-                  <td className="p-2 font-mono text-xs">{product.barcode}</td>
-                  <td className="p-2">{product.purchasePrice}</td>
-                  <td className="p-2">{product.salePrice}</td>
-                  <td className="p-2">{product.minSaleQuantity}</td>
-                  <td className="p-2">
+                  <td className="p-2 font-semibold text-gray-900">{product.name}</td>
+                  <td className="p-2 font-mono text-xs text-gray-900">{product.barcode}</td>
+                  <td className="p-2 text-gray-900">{product.purchasePrice}</td>
+                  <td className="p-2 text-gray-900">{product.salePrice}</td>
+                  <td className="p-2 text-gray-900">{product.minSaleQuantity}</td>
+                  <td className="p-2 text-gray-900">
                     {product.supplierIds.map(sid => {
                       const supplier = suppliers.find(s => s.id === sid);
                       return supplier ? <span key={sid} className="bg-blue-50 text-blue-700 px-2 py-1 rounded mr-1">{supplier.name}</span> : null;
@@ -87,7 +129,7 @@ export default function ProductsManagement() {
                     <button
                       className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded text-xs"
                       title="طباعة باركود"
-                      onClick={e => { e.stopPropagation(); window.open(`/api/print-barcode?code=${product.barcode}&name=${encodeURIComponent(product.name)}`,'_blank'); }}
+                      onClick={e => { e.stopPropagation(); window.open(`/api/print-barcode?code=${product.barcode}&name=${encodeURIComponent(product.name)}`, '_blank'); }}
                     >طباعة</button>
                     <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded" onClick={e => { e.stopPropagation(); setEditProduct(product); }}>تعديل</button>
                     {(user && user.role === 'admin') && (

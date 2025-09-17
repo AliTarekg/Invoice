@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
 import { Currency, CURRENCY_NAMES } from '../types';
 import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 
@@ -14,18 +15,36 @@ export default function AuthForm() {
     password: '',
     displayName: '',
   });
-  const [error, setError] = useState('');
 
   const { signIn, signUp } = useAuth();
+  const { success, error: notifyError, info } = useNotification();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
+    
     try {
+      info('Signing In', 'Authenticating your credentials...');
       await signIn(formData.email, formData.password);
+      success('Login Successful', `Welcome back! You have been signed in successfully.`, {
+        action: {
+          label: 'Continue',
+          onClick: () => {
+            // User will be redirected automatically
+          }
+        }
+      });
     } catch (error: any) {
-      setError(error.message);
+      notifyError('Login Failed', error.message || 'Please check your email and password and try again.', {
+        persistent: true,
+        action: {
+          label: 'Try Again',
+          onClick: () => {
+            setFormData(prev => ({ ...prev, password: '' }));
+            document.getElementById('password-input')?.focus();
+          }
+        }
+      });
     } finally {
       setLoading(false);
     }
@@ -49,11 +68,7 @@ export default function AuthForm() {
 
         <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/20">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 border-l-4 border-red-400 text-red-700 px-4 py-3 rounded-lg">
-                <p className="font-medium">❌ {error}</p>
-              </div>
-            )}
+            {/* Notifications are now handled by the global notification system */}
 
           <div className="space-y-4">
             {/* التسجيل الذاتي معطل */}
@@ -79,7 +94,7 @@ export default function AuthForm() {
               </label>
               <div className="mt-1 relative">
                 <input
-                  id="password"
+                  id="password-input"
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={formData.password}

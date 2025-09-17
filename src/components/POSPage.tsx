@@ -2,6 +2,7 @@
 'use client';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotification } from '../contexts/NotificationContext';
 import { getProducts } from '../lib/products';
 import { getOpenShift, openShift, addSale as addSalePOS, addPayment, addAuditLog, searchSalesByInvoicePartial, getSaleById, processSaleReturn } from '../lib/pos';
 import { getSales } from '../lib/sale';
