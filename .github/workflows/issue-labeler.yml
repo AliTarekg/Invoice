@@ -1,0 +1,14 @@
+name: Issue Templates
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Auto-label issues
+      uses: github/issue-labeler@v3.4
+      with:
+        configuration-path: .github/labeler.yml
